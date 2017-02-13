@@ -69,6 +69,6 @@ for f in $FILES
 do
     IFS=’/_’ read -ra SPLIT <<< "$f"
     domain=${SPLIT[2]}
-    result=`grep -E "bit\.ly|goo\.gl" $f`
+    result=`grep -E "bit\.ly|goo\.gl|bitly\.com" $f`
     [ ! -z "$result" ] && echo -e "Hit(s) on $domain :\n$result\n__________________________________"
 done
