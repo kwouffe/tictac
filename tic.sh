@@ -5,5 +5,5 @@ echo Start
 mkdir $folder
 while read website; do
     htmlpage=${website//\//__}
-    wget -t 1 -T 30 -O $folder/$htmlpage $website
+    wget -t 1 -T 30 --no-check-certificate -O $folder/$htmlpage $website
 done < $filename

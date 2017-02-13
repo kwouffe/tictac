@@ -8,8 +8,15 @@ for f in $FILES
 do
     IFS=’/_’ read -ra SPLIT <<< "$f"
     domain=${SPLIT[2]}
-    result1=`grep "<script src=\"http://" $f | grep -v "<script src=\"http://$domain" | grep -vE "oss\.maxcdn\.com|apis\.google\.com\/js|html5shiv\.googlecode\.com\/svn|html5shim\.googlecode\.com\/svn|ajax\.googleapis\.com\/ajax|code\.jquery\.com\/jquery|maps\.googleapis\.com\/maps\/api\/|maps\.google\.com\/maps\/api|www\.google\.com\/recaptcha\/api\.js|use\.typekit\.net|cdnjs\.cloudflare\.com\/ajax"`
-    result2=`grep "<script src=\"https://" $f | grep -v "<script src=\"https://$domain" | grep -vE "oss\.maxcdn\.com|apis\.google\.com\/js|html5shiv\.googlecode\.com\/svn|html5shim\.googlecode\.com\/svn|ajax\.googleapis\.com\/ajax|code\.jquery\.com\/jquery|maps\.googleapis\.com\/maps\/api\/|maps\.google\.com\/maps\/api|www\.google\.com\/recaptcha\/api\.js|use\.typekit\.net|cdnjs\.cloudflare\.com\/ajax"`
+    counter=$(echo $domain | tr -cd '.' | wc -c)
+    if [ $counter -eq '1' ]
+    then
+      domaintop=$domain
+    else
+      domaintop=$(echo "$domain" | sed 's/^[^\.]*\.//')
+    fi
+    result1=`grep -a "<script src=\"http://" $f | grep -v "<script src=\"http://$domain" | grep -v "<script src=\"http://.*$domaintop/" | grep -vE "oss\.maxcdn\.com|apis\.google\.com\/js|html5shiv\.googlecode\.com\/svn|html5shim\.googlecode\.com\/svn|ajax\.googleapis\.com\/ajax|code\.jquery\.com\/jquery|maps\.googleapis\.com\/maps\/api\/|maps\.google\.com\/maps\/api|www\.google\.com\/recaptcha\/api\.js|use\.typekit\.net|cdnjs\.cloudflare\.com\/ajax|www\.google\-analytics\.com\/urchin\.js|vjs\.zencdn\.net\/c\/video\.js|www\.flickr\.com\/badge_code_v2\.gne|maps\.google\.com\/maps|maxcdn\.bootstrapcdn\.com|www\.clocklink\.com\/embed\.js|austria\.mid\.ru|static1\.squarespace\.com\/static\/|stats\.wordpress\.com\/e\-201707\.js|weatherandtime\.net\/swfobject\.js|assets\.publishing\.service\.gov\.uk|googlecode\.com\/svn"`
+    result2=`grep -a "<script src=\"https://" $f | grep -v "<script src=\"https://$domain" | grep -v "<script src=\"https://.*$domaintop/" | grep -vE "oss\.maxcdn\.com|apis\.google\.com\/js|html5shiv\.googlecode\.com\/svn|html5shim\.googlecode\.com\/svn|ajax\.googleapis\.com\/ajax|code\.jquery\.com\/jquery|maps\.googleapis\.com\/maps\/api\/|maps\.google\.com\/maps\/api|www\.google\.com\/recaptcha\/api\.js|use\.typekit\.net|cdnjs\.cloudflare\.com\/ajax|www\.google\-analytics\.com\/urchin\.js|vjs\.zencdn\.net\/c\/video\.js|www\.flickr\.com\/badge_code_v2\.gne|maps\.google\.com\/maps|maxcdn\.bootstrapcdn\.com|www\.clocklink\.com\/embed\.js|austria\.mid\.ru|static1\.squarespace\.com\/static\/|stats\.wordpress\.com\/e\-201707\.js|weatherandtime\.net\/swfobject\.js|assets\.publishing\.service\.gov\.uk|googlecode\.com\/svn"`
     [ ! -z "$result1" ] && echo -e "HTTP Hit(s) on $domain :\n$result1\n__________________________________"
     [ ! -z "$result2" ] && echo -e "HTTPS Hit(s) on $domain :\n$result2\n__________________________________"
 done
@@ -71,6 +78,6 @@ for f in $FILES
 do
     IFS=’/_’ read -ra SPLIT <<< "$f"
     domain=${SPLIT[2]}
-    result=`grep -E "bit\.ly|goo\.gl|bitly\.com" $f`
+    result=`grep -oE ".{7}bit\.ly\/.{7}|http.{0,1}:\/\/goo\.gl\/.{6}|.{7}bitly\.com\/.{7}" $f | grep -v "http://goo.gl/maps/"`
     [ ! -z "$result" ] && echo -e "Hit(s) on $domain :\n$result\n__________________________________"
 done
