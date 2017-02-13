@@ -8,8 +8,8 @@ for f in $FILES
 do
     IFS=’/_’ read -ra SPLIT <<< "$f"
     domain=${SPLIT[2]}
-    result1=`grep "<script src=\"http://" $f | grep -v "<script src=\"http://$domain" | grep -v "oss.maxcdn.org|apis.google.com/|ajax.googleapis.com|html5shiv.googlecode.com|html5shim.googlecode.com|www.google-analytics.com/urchin.js|maps.googleapis.com|maps.google.com/maps|vjs.zencdn.net"`
-    result2=`grep "<script src=\"https://" $f | grep -v "<script src=\"https://$domain" | grep -v "oss.maxcdn.org|apis.google.com/|ajax.googleapis.com|html5shiv.googlecode.com|html5shim.googlecode.com|www.google-analytics.com/urchin.js|maps.googleapis.com|maps.google.com/maps|vjs.zencdn.net"`
+    result1=`grep "<script src=\"http://" $f | grep -v "<script src=\"http://$domain" | grep -v "oss.maxcdn.org|apis.google.com/|ajax.googleapis.com|html5shiv.googlecode.com|html5shim.googlecode.com|www.google-analytics.com|maps.googleapis.com|maps.google.com|vjs.zencdn.net"`
+    result2=`grep "<script src=\"https://" $f | grep -v "<script src=\"https://$domain" | grep -v "oss.maxcdn.org|apis.google.com/|ajax.googleapis.com|html5shiv.googlecode.com|html5shim.googlecode.com|www.google-analytics.com|maps.googleapis.com|maps.google.com|vjs.zencdn.net"`
     [ ! -z "$result1" ] && echo -e "HTTP Hit(s) on $domain :\n$result1\n__________________________________"
     [ ! -z "$result2" ] && echo -e "HTTPS Hit(s) on $domain :\n$result2\n__________________________________"
 done
