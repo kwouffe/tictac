@@ -9,7 +9,7 @@ do
     IFS=’/_’ read -ra SPLIT <<< "$f"
     domain=${SPLIT[2]}
     result1=`grep "<script src=\"http://" $f | grep -v "<script src=\"http://$domain"`
-    result2=`grep "<script src=\"https://" $f | grep -v "<script src=\"http://$domain"`
+    result2=`grep "<script src=\"https://" $f | grep -v "<script src=\"https://$domain"`
     [ ! -z "$result1" ] && echo -e "HTTP Hit(s) on $domain :\n$result1\n__________________________________"
     [ ! -z "$result2" ] && echo -e "HTTPS Hit(s) on $domain :\n$result2\n__________________________________"
 done
